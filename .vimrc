@@ -26,6 +26,7 @@
 "       vim-material - https://github.com/hzchirs/vim-material
 "       vim-airline  - https://github.com/vim-airline
 "       nerdtree     - https://github.com/preservim/nerdtree
+"       rust-lang    - https://github.com/rust-lang/rust.vim
 " ----------------------------------------------------------------------------
 call plug#begin()
 
@@ -33,6 +34,9 @@ Plug 'hzchirs/vim-material'             " Load the material theme
 Plug 'vim-airline/vim-airline'          " Install a status bar
 Plug 'vim-airline/vim-airline-themes'   " Install status bar themes
 Plug 'preservim/nerdtree'               " File explorer
+Plug 'dense-analysis/ale'               " Lint enginge
+Plug 'rust-lang/rust.vim'               " Rust file detection
+Plug 'xuhdev/vim-latex-live-preview'    " Latex preview
 
 call plug#end()
 
@@ -62,7 +66,7 @@ set expandtab                           " Convert tab to spaces
 set shiftwidth=4                        " Number of spaces for a indent
 set tabstop=4                           " Insert 4 spaces for a tab
 set cmdheight=2                         " More space in the command-line
-set completeopt="menuone,noselect"      " Mostly for cmp
+set completeopt=menu,menuone,preview,noselect,noinsert " Mostly for ALE
 set conceallevel=0                      " So that ' ' is visible in markdown
 set fileencoding="utf-8"                " The encoding writen to a file
 set hlsearch                            " Highlight all matches on previous search
@@ -86,6 +90,8 @@ set signcolumn="yes"                    " Always show sign column, otherwise the
 set wrap                                " Set line wrapping
 set scrolloff=10
 set sidescrolloff=10
+filetype plugin indent on
+syntax on
 
 " ----- Setup keymapping -----------------------------------------------------
 "   Set leaderkey to <space>
@@ -145,4 +151,16 @@ nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
+
+" ----- Setup for programming ------------------------------------------------
+" ============================================================================
+" Rust programming
+autocmd BufNewFile,BufRead *.rs set filetype=rust
+let g:rustfmt_autosave = 1          " Autosave after formating
+let g:ale_completion_enabled=1      " Enable ALE autocompletion
+nnoremap <C-LeftMouse> :ALEGoToDefinition<CR>
+                                    "Ctrl left mouse goto definition
+let g:ale_fixers = { 'rust': ['rustfmt', 'trim_whitespace', 'remove_trailing_lines']}
+let g:ale_linters = { 'rust': ['analyzer'],}
+
 
